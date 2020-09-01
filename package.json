@@ -6,10 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Kobe Bogaerts",
+  "author": "kolllor33",
   "license": "MIT",
   "dependencies": {
     "pkcs11js": "^1.0.21"
+  },
+  "homepage": "https://github.com/kolllor33/eid-lib#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kolllor33/eid-lib.git"
   },
   "keywords": ["eid", "belgian", "card reader", "card"]
 }
