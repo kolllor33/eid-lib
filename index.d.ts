@@ -1,3 +1,5 @@
+/// <reference types="node"/>
+
 import { SlotInfo, TokenInfo } from "pkcs11js";
 type Slot = Buffer;
 
