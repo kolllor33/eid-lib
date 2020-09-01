@@ -247,8 +247,8 @@ export class CardReader {
     public Verify(data: Buffer, signature: Buffer, publicCertificate: Buffer): boolean;
 
     /**
-     * ( Internal use ) Convert a der format file into a pem format file
+     * Convert a der format file into a pem format file
      * @param {Buffer} derBuffer 
      */
-    private _derToPem(derBuffer: Buffer): string;
+    public _derToPem(derBuffer: Buffer): string;
 }
