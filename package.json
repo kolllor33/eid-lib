@@ -1,0 +1,15 @@
+{
+  "name": "eid-lib",
+  "version": "1.0.0",
+  "description": "An library for interacting with the belgian eid card and reader.",
+  "main": "lib.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kobe Bogaerts",
+  "license": "MIT",
+  "dependencies": {
+    "pkcs11js": "^1.0.21"
+  },
+  "keywords": ["eid", "belgian", "card reader", "card"]
+}
