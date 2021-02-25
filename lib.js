@@ -1,5 +1,5 @@
 const pkcs11js = require("pkcs11js");
-const { createVerify } = require("crypto")
+const { createVerify, randomBytes, createHash, createCipheriv, createDecipheriv } = require("crypto");
 
 class CardReader {
 
@@ -90,6 +90,14 @@ class CardReader {
         if (slots.length == 0)
             return null
         return slots[0];
+    }
+
+    /**
+     * Check if a reader has a card in it
+     * @returns boolean
+     */
+    HasCard() {
+        return this.GetAvailableSlot() != null;
     }
 
     /**
@@ -599,7 +607,41 @@ class CardReader {
     }
 
     /**
-     * ( Internal use ) Convert a der format file into a pem format file
+     * Encrypted data wite your card
+     * @param {Buffer} data Data that needs to be encrypted
+     * @returns Encrypted data
+     */
+    EncrypteData(data) {
+        const keyRandom = randomBytes(128);
+        const key = this.SignWithCard(keyRandom, "Authentication");
+        const hash = createHash('sha256').update(key).digest("base64");
+        const iv = randomBytes(16);
+        const cipher = createCipheriv("aes-256-gcm", Buffer.from(hash, "base64"), iv);
+        const cipherString = Buffer.concat([cipher.update(data), cipher.final()]);
+        const tag = cipher.getAuthTag().toString("base64");
+        return keyRandom.toString("base64").concat(".").concat(iv.toString("base64")).concat(".").concat(tag).concat(".").concat(cipherString.toString("base64"));
+    }
+
+    /**
+     * Decrypt data wite your card
+     * @param {string} cipherData Data that has been encrypted
+     * @returns Decrypted data
+     */
+    DecrypteData(cipherData) {
+        const [keyRandom, iv, tag, data] = cipherData.split(".");
+        console.log(keyRandom);
+        console.log(data)
+        console.log(iv);
+        console.log(tag);
+        const key = this.SignWithCard(Buffer.from(keyRandom, "base64"), "Authentication");
+        const hash = createHash('sha256').update(key).digest("base64");
+        const decipher = createDecipheriv("aes-256-gcm", Buffer.from(hash, "base64"), Buffer.from(iv, "base64"));
+        decipher.setAuthTag(Buffer.from(tag, "base64"));
+        return decipher.update(data, "base64") + decipher.final();
+    }
+
+    /**
+     * Convert a der format file into a pem format file
      * @param {Buffer} derBuffer 
      */
     _derToPem(derBuffer) {

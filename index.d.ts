@@ -38,6 +38,12 @@ export class CardReader {
     public GetAvailableSlot(): Slot;
 
     /**
+     * Check if a reader has a card in it
+     * @returns boolean
+     */
+    HasCard(): boolean;
+
+    /**
     * Gets the description of the first slot (cardreader) found
     * @param {Slot} slot a slot
     * @returns Description of the first slot found
@@ -245,6 +251,20 @@ export class CardReader {
     * @returns True if the verification succeeds
     */
     public Verify(data: Buffer, signature: Buffer, publicCertificate: Buffer): boolean;
+
+    /**
+     * Encrypted data wite your card
+     * @param {Buffer} data Data that needs to be encrypted
+     * @returns Encrypted data
+     */
+    EncrypteData(data: Buffer): string;
+
+    /**
+     * Decrypt data wite your card
+     * @param {string} cipherData Data that has been encrypted
+     * @returns Decrypted data
+     */
+    DecrypteData(cipherData: string): Buffer;
 
     /**
      * Convert a der format file into a pem format file

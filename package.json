@@ -1,6 +1,6 @@
 {
   "name": "eid-lib",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An library for interacting with the belgian eid card and reader.",
   "main": "lib.js",
   "scripts": {
@@ -16,5 +16,10 @@
     "type": "git",
     "url": "https://github.com/kolllor33/eid-lib.git"
   },
-  "keywords": ["eid", "belgian", "card reader", "card"]
+  "keywords": [
+    "eid",
+    "belgian",
+    "card reader",
+    "card"
+  ]
 }

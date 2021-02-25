@@ -30,7 +30,11 @@ npm i --save eid-lib
     const CardReader = require("eid-lib");
     const cardReader = new CardReader("beidpkcs11.dll");
     try {
-        const firstname = cardReader.GetFirstName();
+        if(cardReader.HasCard()) {
+            const firstname = cardReader.GetFirstName();
+        } else {
+            console.log("No card detected")
+        }
     } catch (e) {
         console.error(e);
     } finally {
@@ -76,30 +80,60 @@ Every on the card is stored in files.
 ```
 
 ### Sign and Verify data
-You can sign data with your cards private key and the verifing it with the public key.
+You can sign data with your cards private key and then verifing it with the public key.
 
 ```js
     const Assert = require('assert').strict;
     const CardReader = require("eid-lib");
     const cardReader = new CardReader("beidpkcs11.dll");
     try {
-        // Sign
-        const testdata = Buffer.from(["0", "1", "2", "3", "4", "5", "6", "7", "8" ]);
-        // after calling this the middelware will ask you your pin code
-        let signeddata = cardReader.SignWithCard(testdata, "Authentication");
+        if(cardReader.HasCard()) {
+            // Sign
+            const testdata = Buffer.from(["0", "1", "2", "3", "4", "5", "6", "7", "8" ]);
+            // after calling this the middelware will ask you your pin code
+            let signeddata = cardReader.SignWithCard(testdata, "Authentication");
 
-        Assert.notStrictEqual(signeddata, null);
-        // Verification
-        Assert.strictEqual(cardReader.Verify(testdata, signeddata, cardReader.GetCertificateAuthenticationFile()), true);
+            Assert.notStrictEqual(signeddata, null);
+            // Verification
+            Assert.strictEqual(cardReader.Verify(testdata, signeddata, cardReader.GetCertificateAuthenticationFile()), true);
 
-        // Sign and Verify a file on the card
-        const idFile = cardReader.GetIdFile();
-        const idSignatureFile = cardReader.GetIdSignatureFile();
-        const certificateRRN = cardReader.GetCertificateRNFile();
-        Assert.strictEqual(cardReader.Verify(idFile, idSignatureFile, certificateRRN), true);
+            // Sign and Verify a file on the card
+            const idFile = cardReader.GetIdFile();
+            const idSignatureFile = cardReader.GetIdSignatureFile();
+            const certificateRRN = cardReader.GetCertificateRNFile();
+            Assert.strictEqual(cardReader.Verify(idFile, idSignatureFile, certificateRRN), true);
+        } else {
+            console.log("No card detected")
+        }
     } catch (e) {
         console.error(e);
     } finally {
         cardReader.Finalize();
     }
 ```
+
+### Encrypted and Decrypted data
+You can encrypted data with your cards and then decrypte it.
+
+```js
+    const CardReader = require("eid-lib");
+    const cardReader = new CardReader("beidpkcs11.dll");
+    try {
+        const testdata = Buffer.from(["0", "1", "2", "3", "4", "5", "6", "7", "8" ]);
+        if(cardReader.HasCard()) {
+            // after calling this the middelware will ask you your pin code
+            const data = cardReader.EncrypteData(testdata);
+            console.log(data);
+            console.log();
+            //output: ☺☻♥♦♣♠
+            console.log(cardReader.DecrypteData(data).toString());
+        } else {
+            console.log("No card detected");
+        }
+    } catch (e) {
+        console.error(e);
+    } finally {
+        cardReader.Finalize();
+    }
+```
+
